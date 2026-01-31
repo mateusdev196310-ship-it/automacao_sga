@@ -1,0 +1,10 @@
+# Automação de interface gráfica
+pyautogui>=0.9.54
+pywinauto>=0.6.8
+Pillow>=9.0.0
+
+# Banco de dados Firebird
+fdb>=2.0.2
+
+# Utilitários
+opencv-python>=4.5.0

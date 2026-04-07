@@ -12,6 +12,7 @@ from models import Produto, ItemVenda, VendaPDV, EstatisticasExecucao
 from database import RepositorioFirebird, RepositorioMockPDV
 from logger import log
 from ui_dashboard import DashboardExecucao
+from utils import formatar_moeda_br, formatar_numero_br
 
 
 class GerenciadorPDV:
@@ -193,7 +194,8 @@ class ProcessadorVendasPDV:
                     
                     item = ItemVenda(produto=prod, quantidade=qtd, valor_unitario=valor_unit)
                     
-                    log.info(f"  Item {i+1}/{qtd_itens}: {prod.codigo} | {qtd} {prod.unidade} | R$ {valor_unit:.2f}")
+                    qtd_txt = formatar_numero_br(qtd, casas=3, usar_milhar=False) if prod.unidade.upper() == 'KG' else str(int(qtd))
+                    log.info(f"  Item {i+1}/{qtd_itens}: {prod.codigo} | {qtd_txt} {prod.unidade} | R$ {formatar_moeda_br(valor_unit)}")
                     
                     if self._adicionar_produto_ao_cupom(item):
                         itens.append(item)
@@ -211,7 +213,7 @@ class ProcessadorVendasPDV:
                 log.warning(f"Atenção ao fechar venda {numero}, mas continuando...")
             
             venda.finalizar('OK')
-            log.info(f"Venda {numero} finalizada: {len(itens)} itens, R$ {venda.valor_total:.2f}")
+            log.info(f"Venda {numero} finalizada: {len(itens)} itens, R$ {formatar_moeda_br(venda.valor_total)}")
             
         except Exception as e:
             log.error(f"Erro na venda {numero}: {e}")
@@ -366,16 +368,16 @@ class AutomacaoPDV:
             f.write(f"  Vendas com sucesso:  {stats.processos_sucesso}\n")
             f.write(f"  Vendas com falha:    {stats.processos_falha}\n")
             f.write(f"  Total de itens:      {stats.total_itens}\n")
-            f.write(f"  Valor total:         R$ {stats.valor_total:,.2f}\n")
-            f.write(f"  Tempo total:         {stats.tempo_total:.1f}s\n\n")
+            f.write(f"  Valor total:         R$ {formatar_moeda_br(stats.valor_total)}\n")
+            f.write(f"  Tempo total:         {formatar_numero_br(stats.tempo_total, casas=1, usar_milhar=False)}s\n\n")
             
             for venda in vendas:
                 status = "OK" if venda.status == "OK" else "FALHA"
                 f.write(f"\n[{status}] VENDA {venda.numero}\n")
                 f.write("-" * 80 + "\n")
                 f.write(f"  Itens: {len(venda.itens)} (OK: {venda.itens_sucesso}, Falha: {venda.itens_falha})\n")
-                f.write(f"  Valor: R$ {venda.valor_total:,.2f}\n")
-                f.write(f"  Tempo: {venda.tempo_total:.1f}s\n")
+                f.write(f"  Valor: R$ {formatar_moeda_br(venda.valor_total)}\n")
+                f.write(f"  Tempo: {formatar_numero_br(venda.tempo_total, casas=1, usar_milhar=False)}s\n")
         
         log.info(f"TXT Vendas: {filename}")
         return filename

@@ -142,7 +142,7 @@ class TelaOrientacoes:
 • Mantenha o computador ligado e conectado à energia
 • Aguarde o delay entre cupons para não travar o sistema
 • Para CANCELAR a qualquer momento, pressione ESC rapidamente 3 vezes
-• Já existe turno aberto(Certifique-se que o turno está aberto, pronto para fazer vendas)
+• Já existe turno aberto (certifique-se de que o turno está aberto e pronto para vender)
             """
         
         ttk.Label(
@@ -156,7 +156,8 @@ class TelaOrientacoes:
         self.progress_frame = ttk.LabelFrame(self.scrollable_frame, text="Verificação de Itens", padding=10)
         self.progress_frame.pack(fill='x', pady=10)
         
-        self.progress_label = ttk.Label(self.progress_frame, text="0/13 itens verificados")
+        total_itens = len(self.check_vars)
+        self.progress_label = ttk.Label(self.progress_frame, text=f"0/{total_itens} itens verificados")
         self.progress_label.pack()
         
         self.progress_bar = ttk.Progressbar(self.progress_frame, length=400, mode='determinate')

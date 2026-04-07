@@ -12,6 +12,7 @@ from database import RepositorioFirebird, RepositorioMockSGA
 from logger import log
 from ui_dashboard import DashboardExecucao
 from reports import GeradorRelatorios
+from utils import formatar_moeda_br, formatar_numero_br
 
 
 class AutomacaoEntradaProdutos:
@@ -226,7 +227,8 @@ class ProcessadorNotasFiscais:
             
             item = ItemNota(produto=prod, quantidade=qtd, valor_unitario=valor_unit)
             
-            log.info(f"  Item {i+1}/{qtd_itens}: {prod.codigo} | {qtd} {prod.unidade} | R$ {valor_unit:.2f}")
+            qtd_txt = formatar_numero_br(qtd, casas=3, usar_milhar=False) if prod.unidade.upper() == 'KG' else str(int(qtd))
+            log.info(f"  Item {i+1}/{qtd_itens}: {prod.codigo} | {qtd_txt} {prod.unidade} | R$ {formatar_moeda_br(valor_unit)}")
             
             if self.automacao.preencher_item(item):
                 itens.append(item)
@@ -240,7 +242,7 @@ class ProcessadorNotasFiscais:
             log.warning(f"Possivel falha ao concluir nota {numero}")
         
         resumo.finalizar('OK')
-        log.info(f"Nota {numero} finalizada: {len(itens)} itens, R$ {resumo.valor_total:.2f}")
+        log.info(f"Nota {numero} finalizada: {len(itens)} itens, R$ {formatar_moeda_br(resumo.valor_total)}")
         
         return resumo
 

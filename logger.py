@@ -11,6 +11,7 @@ import json
 from collections import defaultdict
 from typing import List
 from models import ResumoNota, VendaPDV, EstatisticasExecucao
+from utils import formatar_moeda_br, formatar_numero_br
 
 
 class SistemaLogging:
@@ -115,7 +116,7 @@ class SistemaLogging:
             writer.writerow(['Vendas com Sucesso:', sum(1 for v in vendas if v.status == 'OK')])
             writer.writerow(['Vendas com Falha:', sum(1 for v in vendas if v.status == 'ERRO')])
             writer.writerow(['Total de Itens:', sum(len(v.itens) for v in vendas)])
-            writer.writerow(['Valor Total Geral:', f"R$ {sum(v.valor_total for v in vendas):,.2f}"])
+            writer.writerow(['Valor Total Geral:', f"R$ {formatar_moeda_br(sum(v.valor_total for v in vendas))}"])
             writer.writerow([])
             
             writer.writerow(['DETALHAMENTO POR VENDA'])
@@ -131,9 +132,9 @@ class SistemaLogging:
                     len(venda.itens),
                     venda.itens_sucesso,
                     venda.itens_falha,
-                    f"{venda.quantidade_total:.3f}",
-                    f"{venda.valor_total:.2f}",
-                    f"{venda.tempo_total:.2f}",
+                    formatar_numero_br(venda.quantidade_total, casas=3, usar_milhar=False),
+                    formatar_numero_br(venda.valor_total, casas=2, usar_milhar=False),
+                    formatar_numero_br(venda.tempo_total, casas=2, usar_milhar=False),
                     venda.timestamp_inicio.strftime('%H:%M:%S'),
                     venda.timestamp_fim.strftime('%H:%M:%S') if venda.timestamp_fim else 'N/A'
                 ])
@@ -154,11 +155,11 @@ class SistemaLogging:
                         seq,
                         item.produto.codigo,
                         item.produto.unidade,
-                        f"{item.quantidade:.3f}" if item.produto.unidade == 'KG' else int(item.quantidade),
-                        f"{item.valor_unitario:.2f}",
-                        f"{item.valor_total:.2f}",
+                        formatar_numero_br(item.quantidade, casas=3, usar_milhar=False) if item.produto.unidade == 'KG' else int(item.quantidade),
+                        formatar_numero_br(item.valor_unitario, casas=2, usar_milhar=False),
+                        formatar_numero_br(item.valor_total, casas=2, usar_milhar=False),
                         item.status,
-                        f"{item.tempo_processamento:.2f}",
+                        formatar_numero_br(item.tempo_processamento, casas=2, usar_milhar=False),
                         item.timestamp_inicio.strftime('%H:%M:%S.%f')[:-3],
                         item.timestamp_fim.strftime('%H:%M:%S.%f')[:-3] if item.timestamp_fim else 'N/A'
                     ])
@@ -183,7 +184,7 @@ class SistemaLogging:
             writer.writerow(['Notas com Sucesso:', sum(1 for r in resumos if r.status == 'OK')])
             writer.writerow(['Notas com Falha:', sum(1 for r in resumos if r.status == 'ERRO')])
             writer.writerow(['Total de Itens:', sum(len(r.itens) for r in resumos)])
-            writer.writerow(['Valor Total Geral:', f"R$ {sum(r.valor_total for r in resumos):,.2f}"])
+            writer.writerow(['Valor Total Geral:', f"R$ {formatar_moeda_br(sum(r.valor_total for r in resumos))}"])
             writer.writerow([])
             
             writer.writerow(['DETALHAMENTO POR NOTA'])
@@ -202,9 +203,9 @@ class SistemaLogging:
                     resumo.itens_falha,
                     resumo.total_un,
                     resumo.total_kg,
-                    f"{resumo.quantidade_total:.3f}",
-                    f"{resumo.valor_total:.2f}",
-                    f"{resumo.tempo_total:.2f}",
+                    formatar_numero_br(resumo.quantidade_total, casas=3, usar_milhar=False),
+                    formatar_numero_br(resumo.valor_total, casas=2, usar_milhar=False),
+                    formatar_numero_br(resumo.tempo_total, casas=2, usar_milhar=False),
                     resumo.timestamp_inicio.strftime('%H:%M:%S'),
                     resumo.timestamp_fim.strftime('%H:%M:%S') if resumo.timestamp_fim else 'N/A'
                 ])
@@ -225,11 +226,11 @@ class SistemaLogging:
                         seq,
                         item.produto.codigo,
                         item.produto.unidade,
-                        f"{item.quantidade:.3f}" if item.produto.unidade == 'KG' else int(item.quantidade),
-                        f"{item.valor_unitario:.2f}",
-                        f"{item.valor_total:.2f}",
+                        formatar_numero_br(item.quantidade, casas=3, usar_milhar=False) if item.produto.unidade == 'KG' else int(item.quantidade),
+                        formatar_numero_br(item.valor_unitario, casas=2, usar_milhar=False),
+                        formatar_numero_br(item.valor_total, casas=2, usar_milhar=False),
                         item.status,
-                        f"{item.tempo_processamento:.2f}",
+                        formatar_numero_br(item.tempo_processamento, casas=2, usar_milhar=False),
                         item.timestamp_inicio.strftime('%H:%M:%S.%f')[:-3],
                         item.timestamp_fim.strftime('%H:%M:%S.%f')[:-3] if item.timestamp_fim else 'N/A'
                     ])
@@ -247,7 +248,7 @@ class SistemaLogging:
             
             writer.writerow(['Codigo', 'Unidade', 'Vezes Usado', 'Valor Total Acumulado'])
             for cod, dados in sorted(produto_freq.items(), key=lambda x: x[1]['count'], reverse=True):
-                writer.writerow([cod, dados['unidade'], dados['count'], f"{dados['valor_total']:.2f}"])
+                writer.writerow([cod, dados['unidade'], dados['count'], formatar_numero_br(dados['valor_total'], casas=2, usar_milhar=False)])
         
         self.info(f"Relatorio CSV exportado: {filename}")
         return filename

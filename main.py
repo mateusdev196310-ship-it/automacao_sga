@@ -15,7 +15,7 @@ from ui_orientacoes import TelaOrientacoes
 from ui_dashboard import DashboardExecucao
 from automacao_sga import AutomacaoSGA
 from automacao_pdv import AutomacaoPDV
-from utils import tocar_som_sucesso, tocar_som_erro
+from utils import tocar_som_sucesso, tocar_som_erro, formatar_moeda_br, formatar_numero_br
 
 
 class SistemaAutomacaoMultiSistema:
@@ -236,8 +236,8 @@ Relatórios gerados:
                     f.write("-" * 80 + "\n")
                     f.write(f"  Notas processadas: {stats.processos_sucesso}/{stats.total_processos}\n")
                     f.write(f"  Itens processados: {stats.itens_sucesso}\n")
-                    f.write(f"  Valor total: R$ {stats.valor_total:,.2f}\n")
-                    f.write(f"  Tempo total: {stats.tempo_total/60:.1f} minutos\n")
+                    f.write(f"  Valor total: R$ {formatar_moeda_br(stats.valor_total)}\n")
+                    f.write(f"  Tempo total: {formatar_numero_br(stats.tempo_total/60, casas=1, usar_milhar=False)} minutos\n")
             
             if sistema == "PDV" and "Vendas Simples" in resultados and resultados["Vendas Simples"].get('sucesso'):
                 vendas_result = resultados["Vendas Simples"]
@@ -248,8 +248,8 @@ Relatórios gerados:
                     f.write("-" * 80 + "\n")
                     f.write(f"  Vendas processadas: {stats.processos_sucesso}/{stats.total_processos}\n")
                     f.write(f"  Itens processados: {stats.itens_sucesso}\n")
-                    f.write(f"  Valor total: R$ {stats.valor_total:,.2f}\n")
-                    f.write(f"  Tempo total: {stats.tempo_total/60:.1f} minutos\n")
+                    f.write(f"  Valor total: R$ {formatar_moeda_br(stats.valor_total)}\n")
+                    f.write(f"  Tempo total: {formatar_numero_br(stats.tempo_total/60, casas=1, usar_milhar=False)} minutos\n")
         
         self.log.info(f"Relatório consolidado: {filename}")
         return filename

@@ -9,6 +9,7 @@ from dataclasses import asdict
 from typing import List
 from models import ResumoNota, EstatisticasExecucao, VendaPDV
 from logger import log
+from utils import formatar_moeda_br, formatar_numero_br
 
 
 class GeradorRelatorios:
@@ -77,16 +78,16 @@ class GeradorRelatorios:
             f.write(f"  Notas com sucesso:   {stats.processos_sucesso}\n")
             f.write(f"  Notas com falha:     {stats.processos_falha}\n")
             f.write(f"  Total de itens:      {stats.total_itens}\n")
-            f.write(f"  Valor total:         R$ {stats.valor_total:,.2f}\n")
-            f.write(f"  Tempo total:         {stats.tempo_total:.1f}s\n\n")
+            f.write(f"  Valor total:         R$ {formatar_moeda_br(stats.valor_total)}\n")
+            f.write(f"  Tempo total:         {formatar_numero_br(stats.tempo_total, casas=1, usar_milhar=False)}s\n\n")
             
             for resumo in resumos:
                 status = "OK" if resumo.status == "OK" else "FALHA"
                 f.write(f"\n[{status}] NOTA {resumo.numero}\n")
                 f.write("-" * 80 + "\n")
                 f.write(f"  Itens: {len(resumo.itens)} (OK: {resumo.itens_sucesso}, Falha: {resumo.itens_falha})\n")
-                f.write(f"  Valor: R$ {resumo.valor_total:,.2f}\n")
-                f.write(f"  Tempo: {resumo.tempo_total:.1f}s\n")
+                f.write(f"  Valor: R$ {formatar_moeda_br(resumo.valor_total)}\n")
+                f.write(f"  Tempo: {formatar_numero_br(resumo.tempo_total, casas=1, usar_milhar=False)}s\n")
         
         log.info(f"TXT: {filename}")
         return filename

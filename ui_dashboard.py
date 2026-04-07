@@ -6,6 +6,7 @@ import queue
 import threading
 import time
 import datetime
+from utils import formatar_moeda_br
 
 
 class DashboardExecucao:
@@ -86,7 +87,7 @@ class DashboardExecucao:
                     self.lbl_progresso.config(text=msg['texto'])
                 elif tipo == 'stats':
                     self.lbl_itens.config(text=f"Itens processados: {msg['itens']}")
-                    self.lbl_valor.config(text=f"Valor total: R$ {msg['valor']:,.2f}")
+                    self.lbl_valor.config(text=f"Valor total: R$ {formatar_moeda_br(msg['valor'])}")
                     self.lbl_tempo.config(text=f"Tempo decorrido: {msg['tempo']}")
                 elif tipo == 'log':
                     self.txt_log.config(state='normal')

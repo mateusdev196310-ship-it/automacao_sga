@@ -133,7 +133,7 @@ class SistemaLogging:
                     venda.itens_sucesso,
                     venda.itens_falha,
                     formatar_numero_br(venda.quantidade_total, casas=3, usar_milhar=False),
-                    formatar_numero_br(venda.valor_total, casas=2, usar_milhar=False),
+                    formatar_moeda_br(venda.valor_total),
                     formatar_numero_br(venda.tempo_total, casas=2, usar_milhar=False),
                     venda.timestamp_inicio.strftime('%H:%M:%S'),
                     venda.timestamp_fim.strftime('%H:%M:%S') if venda.timestamp_fim else 'N/A'
@@ -156,8 +156,8 @@ class SistemaLogging:
                         item.produto.codigo,
                         item.produto.unidade,
                         formatar_numero_br(item.quantidade, casas=3, usar_milhar=False) if item.produto.unidade == 'KG' else int(item.quantidade),
-                        formatar_numero_br(item.valor_unitario, casas=2, usar_milhar=False),
-                        formatar_numero_br(item.valor_total, casas=2, usar_milhar=False),
+                        formatar_moeda_br(item.valor_unitario),
+                        formatar_moeda_br(item.valor_total),
                         item.status,
                         formatar_numero_br(item.tempo_processamento, casas=2, usar_milhar=False),
                         item.timestamp_inicio.strftime('%H:%M:%S.%f')[:-3],
@@ -204,7 +204,7 @@ class SistemaLogging:
                     resumo.total_un,
                     resumo.total_kg,
                     formatar_numero_br(resumo.quantidade_total, casas=3, usar_milhar=False),
-                    formatar_numero_br(resumo.valor_total, casas=2, usar_milhar=False),
+                    formatar_moeda_br(resumo.valor_total),
                     formatar_numero_br(resumo.tempo_total, casas=2, usar_milhar=False),
                     resumo.timestamp_inicio.strftime('%H:%M:%S'),
                     resumo.timestamp_fim.strftime('%H:%M:%S') if resumo.timestamp_fim else 'N/A'
@@ -227,8 +227,8 @@ class SistemaLogging:
                         item.produto.codigo,
                         item.produto.unidade,
                         formatar_numero_br(item.quantidade, casas=3, usar_milhar=False) if item.produto.unidade == 'KG' else int(item.quantidade),
-                        formatar_numero_br(item.valor_unitario, casas=2, usar_milhar=False),
-                        formatar_numero_br(item.valor_total, casas=2, usar_milhar=False),
+                        formatar_moeda_br(item.valor_unitario),
+                        formatar_moeda_br(item.valor_total),
                         item.status,
                         formatar_numero_br(item.tempo_processamento, casas=2, usar_milhar=False),
                         item.timestamp_inicio.strftime('%H:%M:%S.%f')[:-3],
@@ -248,7 +248,7 @@ class SistemaLogging:
             
             writer.writerow(['Codigo', 'Unidade', 'Vezes Usado', 'Valor Total Acumulado'])
             for cod, dados in sorted(produto_freq.items(), key=lambda x: x[1]['count'], reverse=True):
-                writer.writerow([cod, dados['unidade'], dados['count'], formatar_numero_br(dados['valor_total'], casas=2, usar_milhar=False)])
+                writer.writerow([cod, dados['unidade'], dados['count'], formatar_moeda_br(dados['valor_total'])])
         
         self.info(f"Relatorio CSV exportado: {filename}")
         return filename

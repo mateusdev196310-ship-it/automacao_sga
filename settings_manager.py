@@ -1,7 +1,4 @@
-"""
-settings_manager.py
-Gerenciamento de configurações em arquivo INI para persistência.
-"""
+"""Leitura e gravação de configurações no arquivo INI (config.ini)."""
 
 import configparser
 import os
@@ -36,7 +33,7 @@ class SettingsManager:
             self.config[section] = {}
         self.config[section][key] = str(value)
     
-    # === Métodos específicos PDV ===
+    # PDV
     def get_pdv_exe(self):
         return self.get('PDV', 'caminho_exe', '')
     
@@ -55,10 +52,10 @@ class SettingsManager:
         self.set('PDV', 'usuario', usuario)
         self.set('PDV', 'senha', senha)
     
-    # === Métodos específicos SGA ===
+    # SGA
     def get_sga_bd(self):
         return self.get('SGA', 'caminho_bd', '')
     
     def set_sga_config(self, bd):
         self.set('SGA', 'caminho_bd', bd)
-        self.settings.save()
+        self.save()

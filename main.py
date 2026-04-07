@@ -1,7 +1,4 @@
-"""
-main.py
-Ponto de entrada do sistema. Orquestra toda a automação.
-"""
+"""Ponto de entrada: seleção de fluxos, execução e relatório final."""
 
 import os
 import sys

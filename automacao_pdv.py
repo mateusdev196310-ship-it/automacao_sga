@@ -1,7 +1,4 @@
-"""
-automacao_pdv.py
-Automação completa do PDV (Vendas Simples, abertura automática, etc.).
-"""
+"""Rotinas de automação do PDV (vendas simples e abertura/login)."""
 
 import time
 import random

@@ -1,7 +1,4 @@
-"""
-reports.py
-Geradores de relatórios em diferentes formatos (TXT, JSON, CSV).
-"""
+"""Geradores de relatórios (TXT/JSON/CSV) a partir dos resumos da execução."""
 
 import json
 import csv

@@ -1,7 +1,4 @@
-"""
-logger.py
-Sistema de logging, relatórios CSV e gestão de eventos.
-"""
+"""Logging do projeto e exportação de relatórios (TXT/CSV)."""
 
 import logging
 import sys

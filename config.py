@@ -1,7 +1,4 @@
-"""
-config.py
-Configurações centralizadas, enums e constantes do sistema.
-"""
+"""Configurações e constantes usadas pelo sistema."""
 
 from enum import Enum, auto
 from dataclasses import dataclass, field

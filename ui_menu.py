@@ -1,7 +1,4 @@
-"""
-ui_menu.py
-Menu principal de seleção de sistema e fluxos (com persistência INI).
-"""
+"""Tela inicial (Tkinter) para escolher sistema, fluxos e configurações."""
 
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -19,7 +16,7 @@ class MenuPrincipal:
         self.root.geometry("900x750")
         self.root.resizable(True, True)
         
-        # Inicializar gerenciador de configurações
+        # Configurações persistidas no INI
         self.settings = SettingsManager()
         
         self.sistema_selecionado = None
@@ -34,7 +31,7 @@ class MenuPrincipal:
         self.scrollbar_config = None
         self.frame_config_inner = None
         
-        # Referências para widgets de entrada que precisam ser acessados depois
+        # Widgets que precisam ser reutilizados
         self.entry_senha_pdv = None
         
         self._construir_ui()
@@ -140,7 +137,7 @@ class MenuPrincipal:
         self.canvas_config.pack(side='left', fill='both', expand=True)
         self.scrollbar_config.pack(side='right', fill='y')
         
-        # IMPORTANTE: Bind do mousewheel para funcionar em todo o canvas
+        # Mousewheel no canvas
         self.canvas_config.bind_all("<MouseWheel>", self._on_mousewheel)
         
         self.frame_config_inner = ttk.Frame(self.canvas_config)
@@ -331,7 +328,7 @@ class MenuPrincipal:
         db_frame = ttk.Frame(fluxo_frame)
         db_frame.pack(anchor='w', pady=5)
         
-        # Carregar valor salvo do INI
+        # Valor salvo no INI
         bd_sga_salvo = self.settings.get_sga_bd()
         self.caminho_bd_sga = tk.StringVar(value=bd_sga_salvo)
         
@@ -365,7 +362,7 @@ class MenuPrincipal:
         
         ttk.Separator(fluxo_frame, orient='horizontal').pack(fill='x', pady=10)
         
-        # BANCO DE DADOS
+        # Banco de dados
         bd_frame_outer = tk.LabelFrame(fluxo_frame, text="🔴 BANCO DE DADOS FIREBIRD (OBRIGATÓRIO)", 
                                        padx=10, pady=10, fg='#d9534f', font=('Segoe UI', 9, 'bold'))
         bd_frame_outer.pack(fill='x', pady=5)
@@ -375,7 +372,7 @@ class MenuPrincipal:
         bd_frame = ttk.Frame(bd_frame_outer)
         bd_frame.pack(anchor='w', pady=5, fill='x')
         
-        # Carregar valor salvo
+        # Valor salvo no INI
         bd_pdv_salvo = self.settings.get_pdv_bd()
         self.caminho_bd_pdv = tk.StringVar(value=bd_pdv_salvo)
         
@@ -387,7 +384,7 @@ class MenuPrincipal:
         
         ttk.Separator(fluxo_frame, orient='horizontal').pack(fill='x', pady=10)
         
-        # EXECUTÁVEL - ALTERADO PARA OBRIGATÓRIO
+        # Executável
         exe_frame_outer = tk.LabelFrame(fluxo_frame, text="🚀 EXECUTÁVEL DO PDV (OBRIGATÓRIO)", 
                                         padx=10, pady=10, fg='#d9534f', font=('Segoe UI', 9, 'bold'))
         exe_frame_outer.pack(fill='x', pady=5)
@@ -397,7 +394,7 @@ class MenuPrincipal:
         exe_frame = ttk.Frame(exe_frame_outer)
         exe_frame.pack(anchor='w', pady=5, fill='x')
         
-        # Carregar valor salvo
+        # Valor salvo no INI
         exe_salvo = self.settings.get_pdv_exe()
         self.caminho_exe_pdv = tk.StringVar(value=exe_salvo)
         
@@ -407,7 +404,7 @@ class MenuPrincipal:
         ttk.Label(exe_frame_outer, text="⚠️  Obrigatório informar o executável do PDV", 
                  foreground='#d9534f', font=('Segoe UI', 8)).pack(anchor='w', pady=(5,0))
         
-        # CREDENCIAIS DE LOGIN - COM VALIDAÇÃO
+        # Credenciais de acesso
         cred_frame = tk.LabelFrame(fluxo_frame, text="🔐 Credenciais de Acesso (OBRIGATÓRIO)", 
                                   padx=10, pady=10, fg='#d9534f', font=('Segoe UI', 9, 'bold'))
         cred_frame.pack(fill='x', pady=10)
@@ -417,25 +414,25 @@ class MenuPrincipal:
         user_frame.pack(fill='x', pady=2)
         ttk.Label(user_frame, text="Usuário:", width=10).pack(side='left')
         
-        # Carregar valor salvo
+        # Valor salvo no INI
         usuario_salvo = self.settings.get_pdv_usuario()
         self.usuario_pdv = tk.StringVar(value=usuario_salvo)
         
         ttk.Entry(user_frame, textvariable=self.usuario_pdv, width=20).pack(side='left', padx=5)
         
-        # Senha com opção de mostrar/ocultar
+        # Senha (com opção de mostrar/ocultar)
         pass_frame = ttk.Frame(cred_frame)
         pass_frame.pack(fill='x', pady=2)
         ttk.Label(pass_frame, text="Senha:", width=10).pack(side='left')
         
-        # Carregar valor salvo
+        # Valor salvo no INI
         senha_salva = self.settings.get_pdv_senha()
         self.senha_pdv = tk.StringVar(value=senha_salva)
         
         self.entry_senha_pdv = ttk.Entry(pass_frame, textvariable=self.senha_pdv, width=20, show='*')
         self.entry_senha_pdv.pack(side='left', padx=5)
         
-        # Checkbox para mostrar senha
+        # Mostrar/ocultar senha
         self.mostrar_senha_var = tk.BooleanVar(value=False)
         ttk.Checkbutton(
             pass_frame, 
@@ -446,7 +443,7 @@ class MenuPrincipal:
         
         ttk.Separator(fluxo_frame, orient='horizontal').pack(fill='x', pady=10)
         
-        # MODO DE TESTE
+        # Modo teste
         test_frame = ttk.Frame(fluxo_frame)
         test_frame.pack(fill='x', pady=5)
         
@@ -485,7 +482,7 @@ class MenuPrincipal:
                 self.caminho_exe_pdv.set(arquivo)
     
     def _confirmar_config(self):
-        # Validações específicas
+        # Validações por fluxo
         for fluxo in self.fluxos_selecionados.keys():
             if fluxo == "Entrada de Produtos":
                 if not self.usar_mock_sga.get() and not self.caminho_bd_sga.get():
@@ -500,34 +497,34 @@ class MenuPrincipal:
                     return
             
             elif fluxo == "Vendas Simples":
-                # Validações obrigatórias para PDV
+                # Regras do PDV
                 if not self.usar_mock_pdv.get():
-                    # Validar Banco
+                    # Banco
                     if not self.caminho_bd_pdv.get():
                         messagebox.showerror("Erro", 
                             "Para 'Vendas Simples', o BANCO DE DADOS (.fdb) é OBRIGATÓRIO!")
                         return
                     
-                    # Validar EXE (agora obrigatório)
+                    # Executável
                     if not self.caminho_exe_pdv.get():
                         messagebox.showerror("Erro", 
                             "O EXECUTÁVEL DO PDV (.exe) é OBRIGATÓRIO!\n\n"
                             "Clique em '📁 Selecionar EXE...' e informe o caminho.")
                         return
                     
-                    # Validar Login
+                    # Usuário
                     if not self.usuario_pdv.get().strip():
                         messagebox.showerror("Erro", 
                             "O campo USUÁRIO é OBRIGATÓRIO!")
                         return
                     
-                    # Validar Senha
+                    # Senha
                     if not self.senha_pdv.get().strip():
                         messagebox.showerror("Erro", 
                             "O campo SENHA é OBRIGATÓRIO!")
                         return
                     
-                    # Salvar configurações no INI para próxima vez
+                    # Salva para próxima execução
                     self.settings.set_pdv_config(
                         self.caminho_exe_pdv.get(),
                         self.caminho_bd_pdv.get(),
@@ -542,7 +539,7 @@ class MenuPrincipal:
                         f"Quantidade deve estar entre 1 e {Config.MAX_VENDAS_PDV}")
                     return
         
-        # Salvar config SGA também se aplicável
+        # Salva SGA se aplicável
         if "Entrada de Produtos" in self.fluxos_selecionados and self.caminho_bd_sga.get():
             self.settings.set('SGA', 'caminho_bd', self.caminho_bd_sga.get())
             self.settings.save()

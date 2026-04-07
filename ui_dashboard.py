@@ -1,7 +1,4 @@
-"""
-ui_dashboard.py
-Dashboard de acompanhamento em tempo real da execução.
-"""
+"""Dashboard simples para acompanhar a execução em tempo real."""
 
 import tkinter as tk
 from tkinter import ttk, scrolledtext

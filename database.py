@@ -1,7 +1,4 @@
-"""
-database.py
-Repositórios de dados: Firebird e Mocks para testes.
-"""
+"""Acesso a dados: Firebird (real) e repositórios mock (teste)."""
 
 import fdb
 import random

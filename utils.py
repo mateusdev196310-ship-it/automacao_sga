@@ -1,7 +1,4 @@
-"""
-utils.py
-Funções auxiliares e utilitárias (sons, etc.).
-"""
+"""Funções auxiliares (ex.: feedback sonoro)."""
 
 import winsound
 

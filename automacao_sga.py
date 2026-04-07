@@ -1,7 +1,4 @@
-"""
-automacao_sga.py
-Automação completa do SGA (Entrada de Produtos e outros fluxos).
-"""
+"""Rotinas de automação do SGA (foco em Entrada de Produtos)."""
 
 import time
 import random

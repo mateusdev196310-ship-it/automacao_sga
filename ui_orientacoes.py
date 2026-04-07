@@ -1,7 +1,4 @@
-"""
-ui_orientacoes.py
-Tela de checklist e orientações pré-execução.
-"""
+"""Checklist de pré-requisitos antes de iniciar a automação."""
 
 import tkinter as tk
 from tkinter import ttk, messagebox

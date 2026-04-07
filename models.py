@@ -1,7 +1,4 @@
-"""
-models.py
-Todos os modelos de dados (dataclasses) do sistema.
-"""
+"""Modelos (dataclasses) usados na execução e nos relatórios."""
 
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional
